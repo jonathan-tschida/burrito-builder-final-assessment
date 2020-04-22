@@ -51,4 +51,15 @@ describe('OrderForm', () => {
     fireEvent.click(getByText('Submit Order'));
     await waitFor(() => expect(getByText('Order: Nothing selected')).toBeInTheDocument());
   });
+
+  it('removes an ingredient from the list if clicked again', () => {
+    const { getByText } = renderOrderForm();
+
+    fireEvent.click(getByText('beans'));
+    fireEvent.click(getByText('steak'));
+    expect(getByText('Order: beans, steak')).toBeInTheDocument();
+
+    fireEvent.click(getByText('steak'));
+    expect(getByText('Order: beans')).toBeInTheDocument();
+  });
 });
