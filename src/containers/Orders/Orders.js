@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
 import './Orders.css';
 import { connect } from 'react-redux';
-import { setOrders } from '../../actions';
-import { getOrders } from '../../apiCalls';
+import { setOrders, cancelOrder } from '../../actions';
+import { getOrders, deleteOrder } from '../../apiCalls';
 
 class Orders extends Component {
   componentDidMount() {
     getOrders()
       .then(data => this.props.setOrders(data.orders))
       .catch(err => console.error('Error fetching:', err));
+  }
+
+  removeOrder = (id) => {
+    deleteOrder(id)
+      .then(response => {
+        if (response.status === 204) {
+          this.props.cancelOrder(id)
+        }
+      })
   }
 
   render() {
@@ -21,6 +30,7 @@ class Orders extends Component {
               return <li key={'ingredient_' + index}>{ingredient}</li>
             })}
           </ul>
+          <button onClick={() => this.removeOrder(order.id)}>Cancel</button>
         </div>
       )
     });
@@ -38,7 +48,8 @@ const mapStateToProps = ({ orders }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setOrders: (orders) => dispatch(setOrders(orders))
+  setOrders: (orders) => dispatch(setOrders(orders)),
+  cancelOrder: (id) => dispatch(cancelOrder(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Orders);
