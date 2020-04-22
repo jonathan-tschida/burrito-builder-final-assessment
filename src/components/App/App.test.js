@@ -5,7 +5,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '../../reducers';
-import { getOrders, postOrder } from '../../apiCalls.js';
+import { getOrders, postOrder, deleteOrder } from '../../apiCalls.js';
 jest.mock('../../apiCalls.js');
 
 const renderApp = () => {
@@ -58,4 +58,19 @@ describe('App', () => {
     await waitFor(() => getByText('Bob'));
     expect(getAllByText('beans')[1]).toBeInTheDocument();
   });
+
+  it('removes an order when the cancel button is clicked', async () => {
+    getOrders.mockResolvedValueOnce({
+      orders: [
+        {id: 1, name: 'Bob', ingredients: ['beans', 'steak']}
+      ]
+    });
+    deleteOrder.mockResolvedValueOnce({status: 204});
+    const { getByText, getAllByText } = renderApp();
+
+    await waitFor(() => getByText('Bob'));
+    fireEvent.click(getByText('Cancel'));
+
+    await waitFor(() => getByText('No orders yet!'));
+  })
 });

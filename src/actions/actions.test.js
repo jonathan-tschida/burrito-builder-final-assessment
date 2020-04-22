@@ -23,4 +23,14 @@ describe('Action Creators', () => {
     const result = actions.addOrder(order);
     expect(result).toEqual(expectedResult);
   });
+
+  it('should have a type of CANCEL_ORDER and a correct payload', () => {
+    const id = 1;
+    const expectedResult = {
+      type: 'CANCEL_ORDER',
+      id
+    };
+    const result = actions.cancelOrder(id);
+    expect(result).toEqual(expectedResult);
+  });
 });

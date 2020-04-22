@@ -31,4 +31,20 @@ describe('Orders Reducer', () => {
     const result = orders(previousState, action);
     expect(result).toEqual(expectedResult);
   });
+
+  it('should remove an order from state when receiving CANCEL_ORDER', () => {
+    const previousState = [
+      {id: 1, name: 'Bob', ingredients: ['beans', 'steak']},
+      {id: 2, name: 'Bill', ingredients: ['lettuce', 'sofritas']}
+    ];
+    const action = {
+      type: 'CANCEL_ORDER',
+      id: 2
+    };
+    const expectedResult = [
+      {id: 1, name: 'Bob', ingredients: ['beans', 'steak']}
+    ];
+    const result = orders(previousState, action);
+    expect(result).toEqual(expectedResult);
+  });
 });
